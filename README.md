@@ -75,6 +75,27 @@ ignored-packages:
 - `allowed-licenses` - Contains a list of licenses that is define as "Allowed" in your project.
 - `ignored-packages` - Contains a list of npm packages that did not contain an "Allowed" license but has been define as acceptable for the project.
 
+## Additional GitHub Action Workflow Settings
+
+- **`include-asf-category-a`**
+
+  For Apache Software Foundation (ASF) projects, the [ASF 3rd-Party Category A Allowed Licenses](https://www.apache.org/legal/resolved.html#category-a) are already precompiled and can be included in the check by setting the `include-asf-category-a` flag to `true`.
+
+  ### Example Workflow Setup:
+
+  ```yaml
+  # Check Node.js package licenses
+  - uses: erisu/license-checker-action@v1
+    with:
+      include-asf-category-a: true
+  ```
+
+  You can omit the `license-config` setting if you only want to validate against the ASF Category A Allowed Licenses.
+
+  However, you can combine `include-asf-category-a` with `license-config` to allow additional licenses or ignore specific packages.
+
+  **Note**: It is not currently possible to **exclude specific licenses** from the predefined `include-asf-category-a` list. If you need more granular control, you should **avoid using `include-asf-category-a`** and instead define your own full allow list using `license-config`.
+
 ## License
 
   Licensed to the Apache Software Foundation (ASF) under one or more

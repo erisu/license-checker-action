@@ -24,6 +24,10 @@ inputs:
     description: Location of the license configuration from Workspace
     required: false
     default: false
+  include-asf-category-a:
+    description: Include the Apache Software Foundation Category A licenses to be allowed.
+    required: false
+    default: false
 
 runs:
   using: composite
@@ -45,17 +49,11 @@ runs:
         fi
 
     - name: Audit Package Licenses
-      if: ${{ inputs.license-config != 'false'  }}
       shell: bash
       working-directory: ${{ github.action_path }}
+      env:
+        LICENSE_CONFIG: ${{ inputs.license-config }}
+        INCLUDE_ASF_CATEGORY_A: ${{ inputs.include-asf-category-a }}
       run: |
         npm i
-        node "${{ github.action_path }}/license-checker.js" "${{ github.workspace }}" "${{ github.workspace }}/${{ inputs.license-config }}"
-
-    - name: Audit Package Licenses
-      if: ${{ inputs.license-config == 'false'  }}
-      shell: bash
-      working-directory: ${{ github.action_path }}
-      run: |
-        npm i
-        node "${{ github.action_path }}/license-checker.js" "${{ github.workspace }}"
+        node "${{ github.action_path }}/license-checker.js" -w "${{ github.workspace }}"
