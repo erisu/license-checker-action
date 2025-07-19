@@ -15,39 +15,4 @@
 # specific language governing permissions and limitations
 # under the License.
 
-allowed-licenses:
-  - AFL-3.0
-  - Apache-1.1
-  - Apache-2.0
-  - BlueOak-1.0.0
-  - BSD-2-Clause
-  - BSD-3-Clause-LBNL
-  - BSD-3-Clause
-  - BSL-1.0
-  - EPICS
-  - HPND
-  - ICU
-  - ISC
-  - MIT
-  - MS-PL
-  - MulanPSL-2.0
-  - NCSA
-  - PHP-3.01
-  - PostgreSQL
-  - PSF-2.0
-  - StandardML-NJ
-  - Unicode-DFS-2015
-  - Unicode-DFS-2016
-  - Unlicense
-  - UPL-1.0
-  - W3C
-  - WTFPL
-  - X11
-  - Xnet
-  - zlib-acknowledgement
-  - ZPL-2.0
-
-ignored-packages:
-  - spdx-exceptions@2.3.0
-  - spdx-license-ids@3.0.16
-  - spdx-ranges@2.1.1
+node_modules
