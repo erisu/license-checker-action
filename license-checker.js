@@ -19,11 +19,36 @@
 
 import { exit } from 'node:process';
 import { existsSync, readFileSync } from 'node:fs';
+import path from 'node:path';
+import { parseArgs } from 'node:util';
 
-import checker from 'license-checker-rseidelsohn';
+import { init } from 'license-checker-rseidelsohn';
 import { parse } from 'yaml';
 
-const [ workspace, configFile ] = process.argv.slice(2);
+const cmdArgs = process.argv.slice(2);
+const cmdOptions = {
+  config: {
+    type: 'string',
+    short: 'c',
+  },
+  workspace: {
+    type: 'string',
+    short: 'w',
+    required: true,
+  },
+  'include-asf-category-a': {
+    type: 'boolean',
+    default: false,
+  }
+};
+
+const { values } = parseArgs({ args: cmdArgs, options: cmdOptions });
+
+const workspace = values.workspace;
+const includeASFCategoryA = values['include-asf-category-a'] || process.env.INCLUDE_ASF_CATEGORY_A || false;
+
+// If missing from command-line, try environment variable, else false
+const configFile = values.config || (process.env.LICENSE_CONFIG ? path.join(workspace, process.env.LICENSE_CONFIG) : false);
 
 if (!existsSync(workspace)) {
   console.error('Workspace does not exist:', workspace);
@@ -39,9 +64,7 @@ const options = {
 if (!configFile) {
   console.info('No configuration file was provided for the licese checker. Will run with no settings.');
 } else {
-  const hasConfigFile = existsSync(configFile);
-
-  if (!hasConfigFile) {
+  if (!existsSync(configFile)) {
     console.info('The provided configuration file does not exists.');
     exit(1);
   }
@@ -56,6 +79,19 @@ if (!configFile) {
   if (config?.['ignored-packages']) {
     options.excludePackagesStartingWith = config['ignored-packages'].join(';');
   }
+}
+
+if (includeASFCategoryA) {
+  const jsonPath = new URL('./allowed-licenses-groups.json', import.meta.url);
+  const allowedLicensesGroups = JSON.parse(readFileSync(jsonPath, 'utf8'));
+  const userAllowedLicenses = options?.excludeLicenses?.split(',') || [];
+  const mergedAllowedLicenses = [
+    ...userAllowedLicenses,
+    ...allowedLicensesGroups['asf-category-a']
+  ];
+
+  // filter for unique licenses
+  options.excludeLicenses = [...new Set(mergedAllowedLicenses)].toString();
 }
 
 function resultParser(err, packages) {
@@ -77,4 +113,4 @@ function resultParser(err, packages) {
   }
 }
 
-checker.init(options, resultParser);
+init(options, resultParser);
