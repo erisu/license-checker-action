@@ -45,7 +45,7 @@ const cmdOptions = {
 const { values } = parseArgs({ args: cmdArgs, options: cmdOptions });
 
 const workspace = values.workspace;
-const includeASFCategoryA = values['include-asf-category-a'] || process.env.INCLUDE_ASF_CATEGORY_A || false;
+const includeASFCategoryA = values['include-asf-category-a'] || process.env.INCLUDE_ASF_CATEGORY_A === 'true' || false;
 
 // If missing from command-line, try environment variable, else false
 const configFile = values.config || (process.env.LICENSE_CONFIG ? path.join(workspace, process.env.LICENSE_CONFIG) : false);
