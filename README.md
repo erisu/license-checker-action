@@ -38,19 +38,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Checkout project
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       # Setup environment with node
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: 18
+          node-version: 24.x
 
       # Install node packages
       - name: npm install packages
         run: npm i
 
       # Check node package licenses
-      - uses: erisu/license-checker-action@v1
+      - uses: erisu/license-checker-action@v2
         with:
           license-config: 'licence_checker.yml'
 ```
@@ -85,7 +85,7 @@ ignored-packages:
 
   ```yaml
   # Check Node.js package licenses
-  - uses: erisu/license-checker-action@v1
+  - uses: erisu/license-checker-action@v2
     with:
       include-asf-category-a: true
   ```
