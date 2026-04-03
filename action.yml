@@ -16,44 +16,22 @@
 # under the License.
 
 name: License Checker
-
 description: Audits NPM Package Licenses
 
 inputs:
   license-config:
     description: Location of the license configuration from Workspace
     required: false
-    default: false
+    default: 'false'
+
   include-asf-category-a:
     description: Include the Apache Software Foundation Category A licenses to be allowed.
     required: false
-    default: false
+    default: 'false'
 
 runs:
-  using: composite
-  steps:
-    - name: Check Runner OS
-      if: ${{ runner.os != 'Linux' }}
-      shell: bash
-      run: |
-        echo "This action can only be used on Linux runners"
-        exit 1
-
-    - name: Check Node Requirement
-      shell: bash
-      run: |
-        if ! node -v &> /dev/null
-        then
-            echo "Node could not be found."
-            exit 1
-        fi
-
-    - name: Audit Package Licenses
-      shell: bash
-      working-directory: ${{ github.action_path }}
-      env:
-        LICENSE_CONFIG: ${{ inputs.license-config }}
-        INCLUDE_ASF_CATEGORY_A: ${{ inputs.include-asf-category-a }}
-      run: |
-        npm i
-        node "${{ github.action_path }}/license-checker.js" -w "${{ github.workspace }}"
+  using: docker
+  image: Dockerfile
+  env:
+    INPUT_LICENSE_CONFIG: ${{ inputs.license-config }}
+    INPUT_INCLUDE_ASF_CATEGORY_A: ${{ inputs.include-asf-category-a }}

@@ -20,39 +20,32 @@
 import { exit } from 'node:process';
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
-import { parseArgs } from 'node:util';
 
 import { init } from 'license-checker-rseidelsohn';
 import { parse } from 'yaml';
 
-const cmdArgs = process.argv.slice(2);
-const cmdOptions = {
-  config: {
-    type: 'string',
-    short: 'c',
-  },
-  workspace: {
-    type: 'string',
-    short: 'w',
-    required: true,
-  },
-  'include-asf-category-a': {
-    type: 'boolean',
-    default: false,
+const workspace = process.env.GITHUB_WORKSPACE;
+
+console.log('INPUTS:', {
+  licenseConfigPath: process.env.INPUT_LICENSE_CONFIG,
+  includeASFCategoryA: process.env.INPUT_INCLUDE_ASF_CATEGORY_A,
+});
+
+// Check if ASF Category-A licenses should be included.
+const rawIncludeASFCategoryA = process.env.INPUT_INCLUDE_ASF_CATEGORY_A;
+const includeASFCategoryA = rawIncludeASFCategoryA === 'true' || rawIncludeASFCategoryA === true;
+
+// Getting license config file.
+const rawConfig = process.env.INPUT_LICENSE_CONFIG;
+let configFile = null;
+if (rawConfig && rawConfig !== 'false') {
+  const resolved = path.resolve(workspace, rawConfig);
+  // Prevent traversal
+  if (!resolved.startsWith(workspace)) {
+    console.error(`Invalid config path: "${rawConfig}"`);
+    exit(1);
   }
-};
-
-const { values } = parseArgs({ args: cmdArgs, options: cmdOptions });
-
-const workspace = values.workspace;
-const includeASFCategoryA = values['include-asf-category-a'] || process.env.INCLUDE_ASF_CATEGORY_A === 'true' || false;
-
-// If missing from command-line, try environment variable, else false
-const configFile = values.config || (process.env.LICENSE_CONFIG ? path.join(workspace, process.env.LICENSE_CONFIG) : false);
-
-if (!existsSync(workspace)) {
-  console.error('Workspace does not exist:', workspace);
-  exit(1);
+  configFile = resolved;
 }
 
 const options = {
@@ -62,10 +55,10 @@ const options = {
 };
 
 if (!configFile) {
-  console.info('No configuration file was provided for the licese checker. Will run with no settings.');
+  console.info('No configuration file was provided for the license checker. Will run with no settings.');
 } else {
   if (!existsSync(configFile)) {
-    console.info('The provided configuration file does not exists.');
+    console.error('The provided configuration file does not exists.');
     exit(1);
   }
 

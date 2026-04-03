@@ -25,38 +25,90 @@ on:
     branches:
       - '*'
 
-permissions:
-  contents: read
-  security-events: write
-
 jobs:
   test:
-    name: CodeQL
+    name: Test License Checker
+
+    permissions:
+      contents: read
 
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+
+      - name: Test 1 - Runs with valid configs (No invalid licenses)
+        id: test1
+        uses: ./
         with:
-          node-version: 24.x
+          license-config: test/licence_checker_with_allowed.yml
+          include-asf-category-a: true
 
-      - name: Run environment information
+      - name: Test 2 - Runs with no options (detected full invalid licenses)
+        id: test2
+        continue-on-error: true
+        uses: ./
+
+      - name: Test 3 - Runs with include-asf-category-a only (detected few invalid licenses)
+        id: test3
+        continue-on-error: true
+        uses: ./
+        with:
+          include-asf-category-a: true
+
+      - name: Test 4 - Runs with include-asf-category-a only (detected few invalid licenses)
+        id: test4
+        continue-on-error: true
+        uses: ./
+        with:
+          license-config: test/licence_checker_iggnored_only.yml
+
+      - name: Test 5 - Rejects path traversal
+        id: test5
+        continue-on-error: true
+        uses: ./
+        with:
+          license-config: ../../licence_checker_with_allowed.yml
+
+      - name: Assert that invalid tests failed
         run: |
-          node --version
-          npm --version
+          if [ "${{ steps.test2.outcome }}" != "failure" ]; then
+            echo "Test 2 did not fail as expected"
+            exit 1
+          fi
 
+          if [ "${{ steps.test3.outcome }}" != "failure" ]; then
+            echo "Test 3 did not fail as expected"
+            exit 1
+          fi
+
+          if [ "${{ steps.test4.outcome }}" != "failure" ]; then
+            echo "Test 4 did not fail as expected"
+            exit 1
+          fi
+
+          if [ "${{ steps.test5.outcome }}" != "failure" ]; then
+            echo "Test 5 did not fail as expected"
+            exit 1
+          fi
+
+  codeql:
+    name: CodeQL
+
+    permissions:
+      contents: read
+      security-events: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
       - uses: github/codeql-action/init@v4
         with:
-          languages: javascript
+          languages: javascript, actions
           queries: security-and-quality
           config: |
             paths-ignore:
               - node_modules
-
-      - name: Run npm install
-        run: npm i
-        env:
-          CI: true
 
       - uses: github/codeql-action/analyze@v4
