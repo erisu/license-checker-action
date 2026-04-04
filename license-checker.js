@@ -20,29 +20,57 @@
 import { exit } from 'node:process';
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
+import { parseArgs } from 'node:util';
 
 import { init } from 'license-checker-rseidelsohn';
 import { parse } from 'yaml';
 
-const workspace = process.env.GITHUB_WORKSPACE;
+const cmdArgs = process.argv.slice(2);
+const cmdOptions = {
+  config: {
+    type: 'string',
+    short: 'c'
+  },
+  workspace: {
+    type: 'string',
+    short: 'w'
+  },
+  'include-asf-category-a': {
+    type: 'boolean'
+  }
+};
+
+const { values } = parseArgs({ args: cmdArgs, options: cmdOptions });
+
+// Resolve paths to be absolute. This is so CLI can pass in "./", for current directory.
+const workspace = path.resolve(values.workspace || process.env.GITHUB_WORKSPACE);
+
+if (!existsSync(workspace)) {
+  console.error('Workspace does not exist:', workspace);
+  exit(1);
+}
+
+const licenseConfigPath = values.config || process.env.INPUT_LICENSE_CONFIG;
+
+// If neither was set, rawIncludeASFCategoryA will be "undefined".
+const rawIncludeASFCategoryA =
+  values['include-asf-category-a'] !== undefined
+    ? values['include-asf-category-a']
+    : process.env.INPUT_INCLUDE_ASF_CATEGORY_A;
+const includeASFCategoryA = rawIncludeASFCategoryA === true || rawIncludeASFCategoryA === 'true';
 
 console.log('INPUTS:', {
-  licenseConfigPath: process.env.INPUT_LICENSE_CONFIG,
-  includeASFCategoryA: process.env.INPUT_INCLUDE_ASF_CATEGORY_A,
+  licenseConfigPath: licenseConfigPath,
+  includeASFCategoryA: includeASFCategoryA,
 });
 
-// Check if ASF Category-A licenses should be included.
-const rawIncludeASFCategoryA = process.env.INPUT_INCLUDE_ASF_CATEGORY_A;
-const includeASFCategoryA = rawIncludeASFCategoryA === 'true' || rawIncludeASFCategoryA === true;
-
 // Getting license config file.
-const rawConfig = process.env.INPUT_LICENSE_CONFIG;
 let configFile = null;
-if (rawConfig && rawConfig !== 'false') {
-  const resolved = path.resolve(workspace, rawConfig);
+if (licenseConfigPath && licenseConfigPath !== 'false') {
+  const resolved = path.resolve(workspace, licenseConfigPath);
   // Prevent traversal
   if (!resolved.startsWith(workspace)) {
-    console.error(`Invalid config path: "${rawConfig}"`);
+    console.error(`Invalid config path: "${licenseConfigPath}"`);
     exit(1);
   }
   configFile = resolved;
