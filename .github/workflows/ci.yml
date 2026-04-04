@@ -69,7 +69,7 @@ jobs:
         continue-on-error: true
         uses: ./
         with:
-          license-config: test/licence_checker_iggnored_only.yml
+          license-config: test/licence_checker_ignored_only.yml
 
       - name: Test 5 - Rejects path traversal
         id: test5
