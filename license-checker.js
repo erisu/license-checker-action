@@ -60,8 +60,8 @@ const rawIncludeASFCategoryA =
 const includeASFCategoryA = rawIncludeASFCategoryA === true || rawIncludeASFCategoryA === 'true';
 
 console.log('INPUTS:', {
-  licenseConfigPath: licenseConfigPath,
-  includeASFCategoryA: includeASFCategoryA,
+  licenseConfigPath,
+  includeASFCategoryA
 });
 
 // Getting license config file.
@@ -115,18 +115,18 @@ if (includeASFCategoryA) {
   options.excludeLicenses = [...new Set(mergedAllowedLicenses)].toString();
 }
 
-function resultParser(err, packages) {
+function resultParser (_, packages) {
   const formatted = {};
   // Sort the packages by grouping by licenses
   Object.keys(packages).forEach(pkg => {
     const license = packages[pkg].licenses;
-    if(!formatted[license]) {
+    if (!formatted[license]) {
       formatted[license] = [];
     }
     formatted[license].push(pkg);
   });
 
-  if(Object.keys(packages).length > 0) {
+  if (Object.keys(packages).length > 0) {
     console.error(JSON.stringify(formatted, null, 2));
     exit(1);
   } else {
