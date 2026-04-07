@@ -81,7 +81,7 @@ ignored-packages:
 
   For Apache Software Foundation (ASF) projects, the [ASF 3rd-Party Category A Allowed Licenses](https://www.apache.org/legal/resolved.html#category-a) are already precompiled and can be included in the check by setting the `include-asf-category-a` flag to `true`.
 
-  ### Example Workflow Setup:
+  ### Example Workflow Setup
 
   ```yaml
   # Check Node.js package licenses
@@ -98,6 +98,7 @@ ignored-packages:
 
 ## License
 
+  ```text
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
   this work for additional information regarding copyright ownership.
@@ -112,6 +113,7 @@ ignored-packages:
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
+  ```
 
 ## Contribution
 
