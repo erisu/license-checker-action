@@ -5,12 +5,16 @@
   "main": "license-checker.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
   },
   "author": "Bryan \"Erisu\" Ellis",
   "license": "Apache-2.0",
   "dependencies": {
     "license-checker-rseidelsohn": "^4.4.2",
     "yaml": "^2.8.3"
+  },
+  "devDependencies": {
+    "@cordova/eslint-config": "^6.0.1"
   }
 }
