@@ -35,7 +35,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
@@ -142,8 +141,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout project
-      - uses: actions/checkout@v6
-
-      # Check license headers (v2.0.0)
-      - uses: erisu/apache-rat-action@46fb01ce7d8f76bdcd7ab10e7af46e1ea95ca01c
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - uses: erisu/apache-rat-action@46fb01ce7d8f76bdcd7ab10e7af46e1ea95ca01c # v2.0.0
