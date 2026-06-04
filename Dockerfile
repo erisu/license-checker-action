@@ -18,7 +18,7 @@
 # Pin Node.js to a specific minor version line. Allows patch updates for
 # bug & security fixes when the image is rebuilt. Alpine version is also
 # pinned to improve reproducibility and avoid unexpected OS changes.
-FROM node:24.14-alpine3.23
+FROM node:26.3-alpine3.23
 
 # Create a non-root user and group to follow least-privilege principles.
 RUN addgroup -S app && adduser -S app -G app
