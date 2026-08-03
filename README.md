@@ -38,16 +38,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Checkout project
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       # Setup environment with node
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 24.x
+          node-version: 26.x
 
       # Install node packages
       - name: npm install packages
-        run: npm i
+        run: npm ci
 
       # Check node package licenses
       - uses: erisu/license-checker-action@v2
