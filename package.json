@@ -11,7 +11,7 @@
   "author": "Bryan \"Erisu\" Ellis",
   "license": "Apache-2.0",
   "dependencies": {
-    "license-checker-rseidelsohn": "^4.4.2",
+    "license-checker-rseidelsohn": "^5.0.1",
     "yaml": "^2.9.0"
   },
   "devDependencies": {
