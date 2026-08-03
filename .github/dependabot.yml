@@ -16,27 +16,52 @@
 # under the License.
 
 version: 2
+
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
-    cooldown:
-      default-days: 6
     schedule:
-      interval: "cron"
-      cronjob: "0 11 * * 2,4"
+      interval: "weekly"
+
+    groups:
+      gh-actions-patch-minor:
+        update-types:
+          - "patch"
+          - "minor"
+
+    cooldown:
+      default-days: 5
+      semver-major-days: 14
 
   - package-ecosystem: "docker"
     directory: "/"
-    cooldown:
-      default-days: 6
     schedule:
-      interval: "cron"
-      cronjob: "0 11 * * 2,4"
+      interval: "weekly"
+
+    groups:
+      docker-patch-minor:
+        update-types:
+          - "patch"
+          - "minor"
+
+    cooldown:
+      default-days: 5
+      semver-major-days: 14
 
   - package-ecosystem: "npm"
     directory: "/"
-    cooldown:
-      default-days: 6
     schedule:
-      interval: "cron"
-      cronjob: "0 11 * * 2,4"
+      interval: "weekly"
+
+    groups:
+      npm-patch:
+        update-types:
+          - "patch"
+
+      npm-minor:
+        update-types:
+          - "minor"
+
+    cooldown:
+      default-days: 5
+      semver-major-days: 14
