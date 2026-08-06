@@ -97,3 +97,16 @@ ignored-packages:
   However, you can combine `include-asf-category-a` with `license-config` to allow additional licenses or ignore specific packages.
 
   **Note**: It is not currently possible to **exclude specific licenses** from the predefined `include-asf-category-a` list. If you need more granular control, you should **avoid using `include-asf-category-a`** and instead define your own full allow list using `license-config`.
+
+* **`include-dev`**
+
+  By default, only production dependency licenses are checked. Set `include-dev` to `true` to include development dependencies as well.
+
+  ### Example workflow
+
+  ```yaml
+  # Check Node.js package licenses
+  - uses: erisu/license-checker-action@v2
+    with:
+      include-dev: true
+  ```

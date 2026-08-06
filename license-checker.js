@@ -37,6 +37,10 @@ const cmdOptions = {
   },
   'include-asf-category-a': {
     type: 'boolean'
+  },
+  'include-dev': {
+    type: 'boolean',
+    default: false
   }
 };
 
@@ -59,9 +63,12 @@ const rawIncludeASFCategoryA =
     : process.env.INPUT_INCLUDE_ASF_CATEGORY_A;
 const includeASFCategoryA = rawIncludeASFCategoryA === true || rawIncludeASFCategoryA === 'true';
 
+const includeDev = !!(values['include-dev'] || process.env.INPUT_INCLUDE_DEV);
+
 console.log('INPUTS:', {
   licenseConfigPath,
-  includeASFCategoryA
+  includeASFCategoryA,
+  includeDev
 });
 
 // Getting license config file.
@@ -79,7 +86,7 @@ if (licenseConfigPath && licenseConfigPath !== 'false') {
 const options = {
   start: workspace,
   excludePrivatePackages: true,
-  production: true
+  production: !includeDev
 };
 
 if (!configFile) {

@@ -82,6 +82,7 @@ This action can be tested locally by building the Docker image and running it ag
     -e GITHUB_WORKSPACE=/workspace \
     -e INPUT_LICENSE_CONFIG=false \
     -e INPUT_INCLUDE_ASF_CATEGORY_A=false \
+    -e INPUT_INCLUDE_DEV=false \
     -v "$(pwd):/workspace:ro" \
     license-checker-action
   ```
