@@ -25,6 +25,8 @@ updates:
 
     groups:
       gh-actions-patch-minor:
+        patterns:
+          - "*"
         update-types:
           - "patch"
           - "minor"
@@ -40,6 +42,8 @@ updates:
 
     groups:
       docker-patch-minor:
+        patterns:
+          - "*"
         update-types:
           - "patch"
           - "minor"
@@ -55,10 +59,14 @@ updates:
 
     groups:
       npm-patch:
+        patterns:
+          - "*"
         update-types:
           - "patch"
 
       npm-minor:
+        patterns:
+          - "*"
         update-types:
           - "minor"
 
