@@ -29,9 +29,15 @@ inputs:
     required: false
     default: 'false'
 
+  include-dev:
+    description: Should include development dependencies when checking
+    required: false
+    default: 'false'
+
 runs:
   using: docker
   image: Dockerfile
   env:
     INPUT_LICENSE_CONFIG: ${{ inputs.license-config }}
     INPUT_INCLUDE_ASF_CATEGORY_A: ${{ inputs.include-asf-category-a }}
+    INPUT_INCLUDE_DEV: ${{ inputs.include-dev }}
